@@ -62,9 +62,14 @@ Modern ve kullanıcı dostu bir stok takip uygulaması. Flutter ve Supabase tekn
 
 3. **Supabase yapılandırması**
    - Supabase projesi oluşturun
-   - `lib/main.dart` dosyasında Supabase URL ve anon key'i güncelleyin
+   - `env.example` dosyasını `env` olarak kopyalayın
+   - `env` dosyasında Supabase URL ve anon key'inizi güncelleyin
    - Supabase'de `products` tablosunu oluşturun
    - Storage bucket'ı oluşturun
+   - Uygulamayı çalıştırırken environment variables'ları belirtin:
+     ```bash
+     flutter run --dart-define=SUPABASE_URL=your_supabase_url --dart-define=SUPABASE_ANON_KEY=your_supabase_anon_key
+     ```
 
 4. **Uygulamayı çalıştırın**
    ```bash

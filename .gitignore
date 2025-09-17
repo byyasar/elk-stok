@@ -93,6 +93,11 @@ lib/generated_plugin_registrant.dart
 .env.development.local
 .env.test.local
 .env.production.local
+env
+env.local
+env.development.local
+env.test.local
+env.production.local
 
 # Supabase
 .supabase/
