@@ -385,14 +385,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       
                       const SizedBox(height: 32),
                       
-                      // Technical Specifications
-                      Text(
-                        'Teknik Özellikler (Opsiyonel)',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 16),
+                     
                       
-                      const SizedBox(height: 32),
+                      
                       
                       // Save Button
                       SizedBox(
