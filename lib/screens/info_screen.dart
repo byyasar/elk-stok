@@ -116,12 +116,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     title: 'Resim Yükleme',
                     description: 'Ürün fotoğraflarını kamera veya galeriden yükleyin',
                   ),
-                  const SizedBox(height: 24),
-                  _buildFeatureItem(
-                    icon: Icons.palette,
-                    title: 'Tema Desteği',
-                    description: 'Açık, koyu ve sistem teması arasında geçiş yapın',
-                  ),
+                  
                 ],
               ),
               

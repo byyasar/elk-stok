@@ -129,6 +129,22 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  Future<void> _logout() async {
+    try {
+      await _supabase.auth.signOut();
+      if (mounted) {
+        // Uygulamayı tamamen kapat
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      }
+    } catch (e) {
+      print('Logout error: $e');
+      if (mounted) {
+        // Hata olsa bile uygulamayı kapat
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,6 +152,13 @@ class _AuthScreenState extends State<AuthScreen> {
         title: Text(_isLogin ? 'Giriş Yap' : 'Kaydol'),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Geri tuşuna basıldığında çıkış yap
+            _logout();
+          },
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(

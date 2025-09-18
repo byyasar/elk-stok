@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_temiz/screens/info_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -141,17 +143,7 @@ class SettingsScreen extends StatelessWidget {
                         icon: Icons.logout_outlined,
                         title: 'Çıkış Yap',
                         subtitle: 'Hesabınızdan çıkış yapın',
-                        onTap: () async {
-                          await Supabase.instance.client.auth.signOut();
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Başarıyla çıkış yapıldı.'),
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                              ),
-                            );
-                          }
-                        },
+                        onTap: () => _showLogoutDialog(context),
                         isDestructive: true,
                       ),
                     ],
@@ -222,6 +214,83 @@ class SettingsScreen extends StatelessWidget {
       ),
       onTap: onTap,
     );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Çıkış Yap',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          content: Text(
+            'Hesabınızdan çıkış yapmak istediğinizden emin misiniz?',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'İptal',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await _logout(context);
+              },
+              child: Text(
+                'Çıkış Yap',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    try {
+      // SharedPreferences'tan kaydedilen bilgileri temizle
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('remember_me');
+      await prefs.remove('saved_email');
+      await prefs.remove('saved_password');
+      
+      // Supabase'den çıkış yap
+      await Supabase.instance.client.auth.signOut();
+      
+      if (context.mounted) {
+        // Tüm sayfa geçmişini temizle ve InfoScreen'e git
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const InfoScreen()),
+          (route) => false,
+        );
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Başarıyla çıkış yapıldı.'),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Logout error: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Çıkış yapılırken bir hata oluştu: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
   }
 
   void _showClearDataDialog(BuildContext context) {
