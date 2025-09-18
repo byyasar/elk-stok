@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_temiz/test_connection.dart';
 import 'home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -52,6 +53,17 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() => _isLoading = true);
 
     try {
+      // Test Supabase connection
+      print('Testing Supabase connection...');
+      print('Supabase URL: ${_supabase.supabaseUrl}');
+      print('Email: ${_emailController.text.trim()}');
+      
+      // Test direct HTTP connection first
+      await testSupabaseConnection();
+      
+      // Check if user is already logged in
+      final currentUser = _supabase.auth.currentUser;
+      print('Current user: $currentUser');
       if (_isLogin) {
         await _supabase.auth.signInWithPassword(
           email: _emailController.text.trim(),
@@ -88,15 +100,26 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       }
     } on AuthException catch (e) {
+      print('Auth Error: ${e.message}');
+      print('Auth Error Code: ${e.statusCode}');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Giriş hatası: ${e.message}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     } catch (e) {
+      print('General Error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Beklenmedik bir hata oluştu: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Beklenmedik bir hata oluştu: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     } finally {
