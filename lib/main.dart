@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_temiz/theme/app_theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_application_temiz/screens/info_screen.dart';
-import 'package:flutter_application_temiz/screens/auth_screen.dart';
 import 'package:flutter_application_temiz/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_temiz/services/theme_service.dart';
