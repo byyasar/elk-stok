@@ -5,14 +5,22 @@ import 'package:flutter_application_temiz/screens/info_screen.dart';
 import 'package:flutter_application_temiz/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_temiz/services/theme_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load environment variables
+  await dotenv.load(fileName: ".env");
+
   // Supabase bağlantısını test et
-  const supabaseUrl = 'https://aswuxjtiufcgifmfqzyo.supabase.co';
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzd3V4anRpdWZjZ2lmbWZxenlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMzg5MzAsImV4cCI6MjA3MzYxNDkzMH0.T9gXh7LEe06LISA6uHxidSCquRQi1fejpjSDEs4-kfw';
+  final supabaseUrl = dotenv.env['SUPABASE_URL'] ?? '';
+  final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY'] ?? '';
+  
+  if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
+    throw Exception('Supabase credentials not found in environment variables');
+  }
   
   print('***** Initializing Supabase with URL: $supabaseUrl');
   
