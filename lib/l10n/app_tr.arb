@@ -1,0 +1,23 @@
+{
+  "@@locale": "tr",
+  "print": "Yazdır",
+  "cancel": "İptal",
+  "save": "Kaydet",
+  "share": "Paylaş",
+  "done": "Tamam",
+  "printPreview": "Yazdırma Önizlemesi",
+  "selectPrinter": "Yazıcı Seç",
+  "printOptions": "Yazdırma Seçenekleri",
+  "copies": "Kopya",
+  "pages": "Sayfalar",
+  "paperSize": "Kağıt Boyutu",
+  "orientation": "Yönlendirme",
+  "color": "Renk",
+  "duplex": "Çift Taraflı",
+  "quality": "Kalite",
+  "advanced": "Gelişmiş",
+  "printButton": "Yazdır",
+  "cancelButton": "İptal",
+  "saveButton": "Kaydet",
+  "shareButton": "Paylaş"
+}

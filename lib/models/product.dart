@@ -6,6 +6,8 @@ class Product {
   final int stock;
   final String description;
   final String location;
+  final double? price;
+  final DateTime? createdAt;
 
   Product({
     this.id,
@@ -15,6 +17,8 @@ class Product {
     required this.stock,
     this.description = '',
     this.location = '',
+    this.price,
+    this.createdAt,
   });
 
   Product copyWith({
@@ -25,6 +29,8 @@ class Product {
     int? stock,
     String? description,
     String? location,
+    double? price,
+    DateTime? createdAt,
   }) {
     return Product(
       id: id ?? this.id,
@@ -34,6 +40,8 @@ class Product {
       stock: stock ?? this.stock,
       description: description ?? this.description,
       location: location ?? this.location,
+      price: price ?? this.price,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -44,6 +52,8 @@ class Product {
       'stock': stock,
       'description': description,
       'location': location,
+      if (price != null) 'price': price,
+      if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
       if (userId != null) 'user_id': userId,
     };
   }
@@ -58,6 +68,16 @@ class Product {
       imageUrl = 'https://images.pexels.com/photos/1029624/pexels-photo-1029624.jpeg';
     }
     
+    // Tarih parsing
+    DateTime? createdAt;
+    if (json['created_at'] != null) {
+      try {
+        createdAt = DateTime.parse(json['created_at'] as String);
+      } catch (e) {
+        createdAt = null;
+      }
+    }
+    
     return Product(
       id: json['id'] as String?,
       userId: json['user_id'] as String?,
@@ -66,6 +86,8 @@ class Product {
       stock: json['stock'] as int? ?? 0,
       description: json['description'] as String? ?? '',
       location: json['location'] as String? ?? '',
+      price: json['price'] != null ? (json['price'] as num).toDouble() : null,
+      createdAt: createdAt,
     );
   }
 }

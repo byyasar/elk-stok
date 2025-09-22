@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_application_temiz/theme/app_theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_application_temiz/screens/info_screen.dart';
@@ -122,6 +123,16 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeService.themeMode,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''), // İngilizce
+            Locale('tr', ''), // Türkçe
+          ],
+          locale: const Locale('tr', ''), // Varsayılan dil Türkçe
           home: const AuthWrapper(), // Auth durumuna göre yönlendir
         );
       },

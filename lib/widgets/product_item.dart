@@ -125,12 +125,27 @@ class ProductItem extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        'Stok: ${product.stock}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Stok: ${product.stock}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                          if (product.price != null) ...[
+                            const SizedBox(width: 16),
+                            Text(
+                              '₺${product.price!.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                       if (product.location.isNotEmpty) ...[
                         const SizedBox(height: 2),
@@ -150,6 +165,26 @@ class ProductItem extends StatelessWidget {
                                   fontSize: 12,
                                 ),
                                 overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if (product.createdAt != null) ...[
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.calendar_today,
+                              color: Colors.white,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${product.createdAt!.day}.${product.createdAt!.month}.${product.createdAt!.year}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
                               ),
                             ),
                           ],

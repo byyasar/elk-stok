@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "print": "Print",
+  "cancel": "Cancel",
+  "save": "Save",
+  "share": "Share",
+  "done": "Done",
+  "printPreview": "Print Preview",
+  "selectPrinter": "Select Printer",
+  "printOptions": "Print Options",
+  "copies": "Copies",
+  "pages": "Pages",
+  "paperSize": "Paper Size",
+  "orientation": "Orientation",
+  "color": "Color",
+  "duplex": "Duplex",
+  "quality": "Quality",
+  "advanced": "Advanced",
+  "printButton": "Print",
+  "cancelButton": "Cancel",
+  "saveButton": "Save",
+  "shareButton": "Share"
+}

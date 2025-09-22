@@ -18,6 +18,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _descriptionController = TextEditingController();
   final _stockController = TextEditingController();
   final _locationController = TextEditingController();
+  final _priceController = TextEditingController();
   
   File? _selectedImage;
  //String? _uploadedImageUrl; // Supabase'e yüklenen resmin URL'si
@@ -30,6 +31,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _descriptionController.dispose();
     _stockController.dispose();
     _locationController.dispose();
+    _priceController.dispose();
     super.dispose();
   }
 
@@ -157,6 +159,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
         stock: int.parse(_stockController.text.trim()),
         description: _descriptionController.text.trim(),
         location: _locationController.text.trim(),
+        price: _priceController.text.trim().isNotEmpty 
+            ? double.tryParse(_priceController.text.trim()) 
+            : null,
+        createdAt: DateTime.now(),
       );
 
       print('Ürün kaydediliyor - Resim URL: $finalImageUrl'); // Debug için
@@ -324,7 +330,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       
                       const SizedBox(height: 16),
                       
-                      // Stock and Location
+                      // Stock and Price
                       Row(
                         children: [
                           Expanded(
@@ -364,23 +370,50 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Konum',
+                                  'Fiyat (₺)',
                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
                                 TextFormField(
-                                  controller: _locationController,
+                                  controller: _priceController,
                                   style: Theme.of(context).textTheme.bodyLarge,
+                                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                                   decoration: const InputDecoration(
-                                    hintText: 'Örn: Depo A, Raf 3',
+                                    hintText: '0.00',
                                   ),
+                                  validator: (value) {
+                                    if (value != null && value.trim().isNotEmpty) {
+                                      if (double.tryParse(value.trim()) == null) {
+                                        return 'Geçerli bir fiyat girin';
+                                      }
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ],
                             ),
                           ),
                         ],
+                      ),
+                      
+                      const SizedBox(height: 16),
+                      
+                      // Location Field
+                      Text(
+                        'Konum',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _locationController,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        decoration: const InputDecoration(
+                          hintText: 'Örn: Depo A, Raf 3',
+                        ),
                       ),
                       
                       const SizedBox(height: 32),

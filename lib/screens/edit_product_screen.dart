@@ -23,10 +23,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
   late TextEditingController _descriptionController;
   late TextEditingController _stockController;
   late TextEditingController _locationController;
+  late TextEditingController _priceController;
   
   File? _selectedImage;
   late String _currentImageUrl;
   bool _isLoading = false;
+  DateTime? _selectedDate;
 
   @override
   void initState() {
@@ -35,6 +37,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _descriptionController = TextEditingController(text: widget.product.description);
     _stockController = TextEditingController(text: widget.product.stock.toString());
     _locationController = TextEditingController(text: widget.product.location);
+    _priceController = TextEditingController(text: widget.product.price?.toString() ?? '');
+    _selectedDate = widget.product.createdAt;
     _currentImageUrl = widget.product.imageUrl;
   }
 
@@ -44,6 +48,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _descriptionController.dispose();
     _stockController.dispose();
     _locationController.dispose();
+    _priceController.dispose();
     super.dispose();
   }
 
@@ -71,6 +76,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         );
       }
+    }
+  }
+
+  Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      locale: const Locale('tr', 'TR'),
+    );
+    
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
     }
   }
   
@@ -128,6 +149,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
         stock: int.parse(_stockController.text.trim()),
         description: _descriptionController.text.trim(),
         location: _locationController.text.trim(),
+        price: _priceController.text.trim().isNotEmpty 
+            ? double.tryParse(_priceController.text.trim()) 
+            : null,
+        createdAt: _selectedDate,
       );
 
       await ProductService.updateProduct(updatedProduct);
@@ -288,7 +313,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       
                       const SizedBox(height: 16),
                       
-                      // Stock and Location
+                      // Stock and Price
                       Row(
                         children: [
                           Expanded(
@@ -328,23 +353,95 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Konum',
+                                  'Fiyat (₺)',
                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
                                 TextFormField(
-                                  controller: _locationController,
+                                  controller: _priceController,
                                   style: Theme.of(context).textTheme.bodyLarge,
+                                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                                   decoration: const InputDecoration(
-                                    hintText: 'Örn: Depo A, Raf 3',
+                                    hintText: '0.00',
                                   ),
+                                  validator: (value) {
+                                    if (value != null && value.trim().isNotEmpty) {
+                                      if (double.tryParse(value.trim()) == null) {
+                                        return 'Geçerli bir fiyat girin';
+                                      }
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ],
                             ),
                           ),
                         ],
+                      ),
+                      
+                      const SizedBox(height: 16),
+                      
+                      // Location Field
+                      Text(
+                        'Konum',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _locationController,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        decoration: const InputDecoration(
+                          hintText: 'Örn: Depo A, Raf 3',
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 16),
+                      
+                      // Date Field
+                      Text(
+                        'Eklenme Tarihi',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      InkWell(
+                        onTap: _selectDate,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.calendar_today,
+                                color: Colors.grey,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                _selectedDate != null
+                                    ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                                    : 'Tarih seçin',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: _selectedDate != null ? Colors.black : Colors.grey,
+                                ),
+                              ),
+                              const Spacer(),
+                              const Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       
                       const SizedBox(height: 32),
