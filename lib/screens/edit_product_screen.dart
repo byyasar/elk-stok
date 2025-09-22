@@ -445,13 +445,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       ),
                       
                       const SizedBox(height: 32),
-                      
-                      // Technical Specifications
-                      Text(
-                        'Teknik Özellikler',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 16),
+                     
                       
                       const SizedBox(height: 32),
                       
